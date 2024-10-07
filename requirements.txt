@@ -1,1 +1,4 @@
-
+astropy==6.1.4
+PyMMT==1.0.0
+Requests==2.32.3
+setuptools==72.1.0
