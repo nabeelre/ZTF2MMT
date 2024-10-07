@@ -26,7 +26,7 @@ def parse():
         help="If provided send as target-of-opportunity trigger"
     )
     parser.add_argument(
-        '--notes', type=str, required=True,
+        '--notes', type=str, required=False, default="",
         help="Notes to include in request"
     )
 

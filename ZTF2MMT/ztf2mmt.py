@@ -70,13 +70,13 @@ def query_fritz(ZTFID):
 
 def describe_target(target, include_setup=False):
     details = (
-        "\n"
+        "\nCompleted submission:\n"
         f"{target.objectid} ({target.magnitude} mag)\n"
         f"{target.ra} {target.dec}\n"
         f"{target.observationtype} request for "
         f"{target.numberexposures * target.exposuretime}s "
         f"({target.numberexposures}x{target.exposuretime}s)\n"
-        f"{target.notes}\n"
+        f"{target.notes if target.notes else 'No notes'}\n"
     )
     print(details)
 
@@ -124,17 +124,17 @@ if __name__ == "__main__":
     )
     print("Target created and validated")
 
-    # target.post()
-    # print("Target posted to MMT queue")
+    target.post()
+    print("Target posted to MMT queue")
 
-    # ZTF2MMT.fritz_finderchart.get_finder(
-    #     ZTFID=ZTFID,
-    #     image_source="desi",
-    #     use_ztfref=False,
-    #     num_offset_stars=3
-    # )
-    # print("Downloaded finder from Fritz")
-    # target.upload_finder(finder_path=f"finders/{ZTFID}_finderchart.pdf")
-    # print("Uploaded finder to MMT")
+    ZTF2MMT.fritz_finderchart.get_finder(
+        ZTFID=args.ztfid,
+        image_source="desi",
+        use_ztfref=False,
+        num_offset_stars=3
+    )
+    print("Downloaded finder from Fritz")
+    target.upload_finder(finder_path=f"finders/{args.ztfid}_finderchart.pdf")
+    print("Uploaded finder to MMT")
 
     describe_target(target, include_setup=True)
