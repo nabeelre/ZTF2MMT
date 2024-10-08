@@ -35,6 +35,8 @@ def get_finder(ZTFID, image_source, use_ztfref, num_offset_stars):
     r = requests.get(endpoint, headers=headers, params=params)
 
     if r.status_code == 200:
+        if not os.path.exists("finders"):
+            os.makedirs("finders")
         with open(f"finders/{ZTFID}_finderchart.pdf", "wb") as pdf_file:
             pdf_file.write(r.content)
             print("Successfully downloaded finding chart for", ZTFID)

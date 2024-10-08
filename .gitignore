@@ -162,4 +162,4 @@ cython_debug/
 #.idea/
 
 .DS_Store
-finders
+ZTF2MMT/finders/*
