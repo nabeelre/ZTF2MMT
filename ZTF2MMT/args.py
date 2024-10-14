@@ -47,5 +47,9 @@ def parse():
         '--filter', type=str, required=False, default="LP3800",
         help="Filter to use [LP3800 or LP3500]"
     )
+    parser.add_argument(
+        '--pa', type=int, required=False, default=0,
+        help="Position angle of slit"
+    )
 
     return parser.parse_args()

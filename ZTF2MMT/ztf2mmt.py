@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     payload = {
         "objectid": args.ztfid,
-        "ra": ra, "dec": dec, "pa": 0,
+        "ra": ra, "dec": dec, "pa": args.pa,
         "exposuretime": args.exptime, "numberexposures": args.numexp,
         "priority": args.prio, "targetofopportunity": int(args.too),
         "magnitude": mag,
