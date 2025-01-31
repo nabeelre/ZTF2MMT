@@ -6,10 +6,6 @@ import pymmt
 import ZTF2MMT
 
 
-def send_to_MMT():
-    pass
-
-
 def query_fritz(ZTFID):
     """
     Queries Fritz for the coordinates and latest magnitude of a given ZTF source.
