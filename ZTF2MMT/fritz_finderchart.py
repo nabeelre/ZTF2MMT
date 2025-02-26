@@ -2,6 +2,7 @@
 Written 06/26/24
 Contact Nabeel Rehemtulla nabeelr@u.northwestern.edu with issues
 """
+from datetime import datetime
 import requests
 import argparse
 import os
@@ -45,6 +46,31 @@ def get_finder(ZTFID, image_source, use_ztfref, num_offset_stars):
         print(r.text)
 
 
+def get_starlist(ZTFID, facility, use_ztfref, num_offset_stars, obstime):
+    """
+    Get starlist entry for sources formatted for specified facility
+    """
+    endpoint = f"https://fritz.science/api/sources/{ZTFID}/offsets"
+    params = {
+        "facility": facility,
+        "use_ztfref": use_ztfref,
+        "num_offset_stars": num_offset_stars,
+        "obstime": obstime
+    }
+    r = requests.get(endpoint, headers=headers, params=params)
+
+    if r.status_code == 200:
+        starlist = r.json().get("data", {}).get("starlist_str", "")
+        starlist = starlist.replace("&nbsp;", " ")
+
+    if r.status_code != 200 or starlist == "":
+        print("Failed to fetch finding chart for", ZTFID)
+        print(r.text)
+        return
+
+    return starlist+"\n"
+
+
 if __name__ == "__main__":
     """
     Usage examples:
@@ -72,19 +98,34 @@ if __name__ == "__main__":
         '--num_offset_stars', type=int, required=False, default=3,
         help="Number of offset stars to show [0,4]"
     )
+    parser.add_argument(
+        '--facility', type=str, required=False, default="Keck",
+        help="Facility to prepare starlist for"
+    )
 
     args = parser.parse_args()
 
     assert args.image_source in ['desi', 'dss', 'ztfref', 'ps1']
     assert (args.num_offset_stars >= 0) and (args.num_offset_stars <= 4)
+    assert args.facility in ["Keck", "Shane", "P200", "P200-NGPS"]
     use_ztfref = not args.use_gaia_pos
     ZTFIDs = args.sources
     print("Fetching finding charts for", ZTFIDs)
     print(
         f"Using {args.image_source} reference images and",
         f"{'ztfref' if use_ztfref else 'Gaia DR3'} positions",
-        f"for {args.num_offset_stars} offset stars"
+        f"for {args.num_offset_stars} offset stars",
+        f"with a starlist formatted for {args.facility}"
     )
 
+    starlist = ""
     for ZTFID in ZTFIDs:
         get_finder(ZTFID, args.image_source, use_ztfref, args.num_offset_stars)
+        starlist += get_starlist(
+            ZTFID, args.facility, use_ztfref, args.num_offset_stars,
+            datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+        )
+
+    with open("finders/starlist.txt", "w") as f:
+        f.write(starlist)
+    print(starlist)
