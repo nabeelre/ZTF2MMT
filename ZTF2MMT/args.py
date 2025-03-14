@@ -11,7 +11,8 @@ def parse():
     )
     parser.add_argument(
         '--exptime', type=int, required=True,
-        help="Second of exposure time per exposure"
+        help="Seconds of exposure time per exposure." +
+        "Typically (1200, 1800, 2200, 2400) for (18, 19, 20, 21) mag respectively"
     )
     parser.add_argument(
         '--numexp', type=int, required=True,
@@ -48,7 +49,7 @@ def parse():
         help="Filter to use [LP3800 or LP3500]"
     )
     parser.add_argument(
-        '--pa', type=int, required=False, default=0,
+        '--pa', type=float, required=False, default=0,
         help="Position angle of slit"
     )
 
