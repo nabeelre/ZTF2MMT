@@ -57,7 +57,8 @@ def query_fritz(ZTFID):
     for phot in data:
         if (phot.get('instrument_name') == 'ZTF') &\
            (phot.get('origin', '') != 'alert_fp') &\
-           (phot.get('mjd', 0) > mjd_max):
+           (phot.get('mjd', 0) > mjd_max) &\
+           (phot.get('mag') is not None):
             mjd_max = phot.get('mjd')
             mag = phot.get('mag')
 
